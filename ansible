@@ -1,4 +1,37 @@
-# Azure CLI to login into Azure and ebabled RBAC
-az group create --name HarishResouceGroup --location southindia
-az aks create -g HarishResouceGroup -n  --enable-aHarishCluster ad --enable-azure-rbac
-az aks update -g myResourceGroup -n myAKSCluster --enable-azure-rbac
+- name: Remediation
+  hosts: 432.534.11.90
+  gather_facts: true
+  become: true
+  task:
+   - name: Install Azure Cli
+        apt: name= azure-cli update_cache= yes
+        
+  - name: Enable Kubernetes Role-Based Access Control - AKS
+        shell: az group create --name HarishResouceGroup --location southindia \
+               az aks create -g HarishResouceGroup -n  --enable-a HarishCluster ad --enable-azure-rbac \
+                az aks update -g myResourceGroup -n myAKSCluster --enable-azure-rbac \
+
+ - name: Ensure that no network security groups allow unrestricted inbound access on TCP port 3389 
+        shell: az network nsg rule list --nsg-name cc-production-vm-nsg --resource-group cloud-shell-storage-westeurope --query "[?direction=='Inbound' && access=='Allow' && protocol=='TCP' && destinationPortRange=='3389']"  
+
+  - name: Import the APT repo key (Debian)
+        shell: az group create --name HarishResouceGroup --location southindia \
+               az aks create -g HarishResouceGroup -n  --enable-a HarishCluster ad --enable-azure-rbac \
+                az aks update -g myResourceGroup -n myAKSCluster --enable-azure-rbac \
+                
+  - name: Ensure that Azure Blob Storage service has a lifecycle management policy configured.
+        shell: aEnable-AzStorageBlobLastAccessTimeTracking  -ResourceGroupName $rgName -StorageAccountName $accountName -PassThru
+ 
+  - name: Enable HTTP to HTTPS redirects for your Microsoft Azure App Service web applications.
+    azure_rm_trafficmanagerprofile:
+      resource_group: "{{ resource_group_webapp }}"
+      name: "{{ traffic_manager_profile_name }}"
+      location: global
+      routing_method: performance
+      dns_config:
+        relative_name: "{{ traffic_manager_profile_name }}"
+        ttl:  60
+      monitor_config:
+        protocol: HTTPS
+        port: 80
+        path: '/'
