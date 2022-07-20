@@ -1,0 +1,3 @@
+# Azure CLI to login into Azure and ebabled RBAC
+az group create --name HarishResouceGroup --location southindia
+az aks create -g HarishResouceGroup -n  --enable-aHarishCluster ad --enable-azure-rbac
